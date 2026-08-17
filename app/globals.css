@@ -1,0 +1,341 @@
+@import "tailwindcss";
+
+/*
+  AI Love You — Studio Design System
+  Ported from the AI Love You Journal reference build (index.css) in
+  Google Drive: bg #fcfcfd, ink #0e0e10, ink-gray #7f8489, accent
+  "Studio Vermilion" #E34234. See README for source notes.
+*/
+
+:root {
+  --background: #fcfcfd;
+  --surface: rgba(14, 14, 16, 0.03);
+  --surface-2: rgba(14, 14, 16, 0.05);
+  --foreground: #0e0e10;
+  --muted: #7f8489;
+  --border: rgba(14, 14, 16, 0.1);
+  --accent: #e34234;
+  --accent-soft: rgba(227, 66, 52, 0.1);
+
+  /* Pixel-art nod: a system monospace stack, used sparingly for small
+     uppercase labels (eyebrows, captions, nav) alongside the serif
+     signature logo and Helvetica Neue body/headline type. */
+  --font-pixel: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono",
+    Menlo, Consolas, monospace;
+
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+  --spacing-xl: 8rem;
+  --nav-height: 80px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  /* Swap to var(--font-inter-tight) once next/font/google can be used
+     (needs build-time network access) — see app/layout.tsx. */
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* Display / heading typography */
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-family: var(--font-display), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.headline {
+  font-size: clamp(3rem, 8vw, 8rem);
+  line-height: 0.9;
+  font-weight: 400;
+}
+
+.sub-headline {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: var(--muted);
+  max-width: 40rem;
+}
+
+.container-page {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.placeholder-block {
+  border: 1px dashed var(--border);
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(14, 14, 16, 0.03),
+    rgba(14, 14, 16, 0.03) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}
+
+/* Buttons — transparent + 1px border, fills solid on hover */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.85rem 1.75rem;
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Pixel-dither sweep — a faint checkerboard mask that sweeps in on
+   hover, the pill's small nod to the pixel-grid hero. */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: repeating-conic-gradient(
+    currentColor 0% 25%,
+    transparent 0% 50%
+  );
+  background-size: 4px 4px;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.btn:hover::before {
+  opacity: 0.12;
+  transform: translateX(0);
+}
+
+.btn:hover {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
+.btn-solid {
+  background: var(--accent);
+  color: var(--background);
+  border-color: var(--accent);
+}
+
+.btn-solid:hover {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
+.btn-sm {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.7rem;
+}
+
+/* Small uppercase label — homepage eyebrow, case-study category/eyebrow
+   tags. Pixel-art nod via monospace, kept small and restrained so it
+   reads as a system detail, not a competing display face. */
+.eyebrow {
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Nav underline link */
+.nav-link {
+  position: relative;
+  font-family: var(--font-pixel);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  color: var(--muted);
+  transition: color 0.25s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.nav-link:hover {
+  color: var(--foreground);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Journal-style visual caption — small uppercase label beneath a
+   portfolio/case-study image block, adapted from the AI Love You
+   Journal's .caption pattern (index.css). */
+.visual-caption {
+  display: block;
+  margin-top: 0.85rem;
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.visual-caption .accent {
+  color: var(--accent);
+}
+
+/* Homepage pixel hero — full-bleed interactive canvas (PixelGridHero)
+   sitting behind the intro copy. A left-to-right scrim keeps the text
+   legible while leaving the animation visible across most of the
+   section, especially on the right and lower half. */
+.pixel-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pixel-hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pixel-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    var(--background) 0%,
+    var(--background) 34%,
+    rgba(252, 252, 253, 0.82) 50%,
+    rgba(252, 252, 253, 0.35) 68%,
+    transparent 85%
+  );
+}
+
+.pixel-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Pixel-dot divider — a restrained row of square dots, used sparingly
+   as a section accent elsewhere on the site to echo the hero grid
+   without repeating the full animation. */
+.pixel-dots {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* Ambient background — very subtle drifting tint, purely decorative.
+   Two soft blurred blobs (accent + ink-gray) slowly move behind the
+   content at low opacity so the page doesn't feel static without
+   calling attention to itself. Disabled for reduced-motion users. */
+.bg-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-ambient::before,
+.bg-ambient::after {
+  content: "";
+  position: absolute;
+  width: 55vw;
+  height: 55vw;
+  min-width: 480px;
+  min-height: 480px;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.05;
+}
+
+.bg-ambient::before {
+  top: -10%;
+  left: -10%;
+  background: var(--accent);
+  animation: bg-drift-a 36s ease-in-out infinite alternate;
+}
+
+.bg-ambient::after {
+  bottom: -15%;
+  right: -10%;
+  background: var(--muted);
+  opacity: 0.06;
+  animation: bg-drift-b 42s ease-in-out infinite alternate;
+}
+
+@keyframes bg-drift-a {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(6vw, 8vh) scale(1.12);
+  }
+}
+
+@keyframes bg-drift-b {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(-5vw, -6vh) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-ambient::before,
+  .bg-ambient::after {
+    animation: none;
+  }
+}
