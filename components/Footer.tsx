@@ -77,10 +77,10 @@ export default function Footer() {
                 Instagram
               </a>
               <a
-                href="https://www.ailoveyou.uk"
+                href="/journal"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-accent"
+                className="text-accent transition-colors hover:opacity-70"
               >
                 Journal
               </a>

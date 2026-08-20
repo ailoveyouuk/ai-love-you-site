@@ -42,8 +42,8 @@ export default function WorkPage() {
             <p className="mt-3 max-w-xl text-sm" style={{ color: "var(--ak-muted)" }}>
               The case study above covers the build — the live, ongoing
               publication is at{" "}
-              <a href="https://www.ailoveyou.uk" target="_blank" rel="noopener noreferrer" className="ak-link-accent">
-                ailoveyou.uk
+              <a href="/journal" target="_blank" rel="noopener noreferrer" className="ak-link-accent">
+                ailoveyou.uk/journal
               </a>
               , and it&apos;s the clearest evidence of the AI Love You voice.
             </p>

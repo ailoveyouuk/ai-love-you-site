@@ -838,6 +838,14 @@ function HomeFooterMobile() {
         >
           Instagram
         </a>
+        <a
+          href="/journal"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ak-label ak-link-accent"
+        >
+          Journal
+        </a>
         <Link href="/privacy" className="ak-label">
           Privacy
         </Link>

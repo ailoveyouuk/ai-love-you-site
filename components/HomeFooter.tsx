@@ -23,6 +23,14 @@ export default function HomeFooter() {
           >
             Instagram
           </a>
+          <a
+            href="/journal"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ak-label ak-link-accent transition-colors hover:opacity-70"
+          >
+            Journal
+          </a>
           <Link
             href="/privacy"
             className="ak-label transition-colors hover:text-[color:var(--ak-ink)]"
