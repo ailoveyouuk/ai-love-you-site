@@ -1,6 +1,12 @@
 [[redirects]]
   from = "/journal"
-  to = "/journal/"
+  to = "/journal/index.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/journal/"
+  to = "/journal/index.html"
   status = 301
   force = true
 
