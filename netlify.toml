@@ -1,0 +1,11 @@
+[[redirects]]
+  from = "/journal"
+  to = "/journal/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/journal/*"
+  to = "https://ai-love-you.netlify.app/:splat"
+  status = 200
+  force = true
