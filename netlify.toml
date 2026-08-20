@@ -10,6 +10,18 @@
   status = 301
   force = true
 
+# Safety net: Netlify's Pretty URLs post-processing on the Journal's own
+# site strips .html from links and can 301 bare-extension requests to a
+# host-relative path, which the browser then resolves against ailoveyou.uk
+# directly (losing the /journal/ prefix) since the Journal has no concept
+# of being mounted under /journal. Catch that exact fallout pattern and
+# route it back to the correct proxied path.
+[[redirects]]
+  from = "/journal-edition-*"
+  to = "/journal/journal-edition-:splat.html"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/journal/*"
   to = "https://ai-love-you.netlify.app/:splat"
