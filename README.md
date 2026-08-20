@@ -16,23 +16,22 @@ build; `npm run lint` runs ESLint. Both currently pass clean.
 
 ## Contact form
 
-The enquiry form on `/contact` sends via [Resend](https://resend.com) to
-`lewis@ailoveyou.uk`. To make it actually send:
+The enquiry form on `/contact` submits via [Netlify
+Forms](https://docs.netlify.com/forms/setup/) — no third-party email
+service, API key, or environment variable needed. `public/__forms.html`
+is a hidden static replica of the form that exists purely so Netlify's
+build-time form detection registers it; `components/ContactForm.tsx`
+submits the real form to that same registered name via `fetch`.
 
-1. Create a free Resend account and generate an API key.
-2. Copy `.env.example` to `.env.local` and paste the key into
-   `RESEND_API_KEY`.
-3. Add the same variable in your hosting provider's environment settings
-   once deployed (e.g. Vercel → Project Settings → Environment Variables).
+To receive enquiries by email, turn on notifications once in the Netlify
+dashboard: **Site settings → Forms → Form notifications → Add
+notification → Email notification** → `lewis@ailoveyou.uk`. Submissions
+also show up under **Forms** in the dashboard regardless of whether email
+notifications are configured, so nothing is silently dropped.
 
-Without a key set, the form fails gracefully with a message pointing
-people at the direct email/phone details shown alongside it — it won't
-silently drop enquiries.
-
-The send address is Resend's shared `onboarding@resend.dev` domain, which
-works immediately with no setup. For better deliverability, verify
-`ailoveyou.uk` in the Resend dashboard and switch `FROM_EMAIL` in
-`app/api/contact/route.ts` to an address on it.
+This only works once the site is deployed on Netlify — Netlify's form
+detection has nothing to register against in local dev (`npm run dev`),
+so submissions there will fail silently. Test on the deployed site.
 
 ## Pages
 

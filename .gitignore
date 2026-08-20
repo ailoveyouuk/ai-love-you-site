@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Superseded by Netlify Forms (see components/ContactForm.tsx and
+# public/__forms.html) — kept on disk as reference, not tracked.
+app/api/contact/route.ts.unused

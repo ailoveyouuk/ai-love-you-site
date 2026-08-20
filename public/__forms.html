@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+  <!--
+    Not a real page — never linked to or rendered by the app. It exists
+    purely so Netlify's build-time form detection (which scans static
+    HTML in the publish directory) finds this exact form shape and
+    registers it. components/ContactForm.tsx submits to Netlify's forms
+    endpoint via fetch with a matching form-name and field set; without
+    this file, Netlify has no static form to match that submission
+    against and silently drops it.
+  -->
+  <form name="contact" data-netlify="true" netlify-honeypot="company" hidden>
+    <input type="text" name="name" />
+    <input type="email" name="email" />
+    <select name="project">
+      <option value="website">A website</option>
+      <option value="platform">A platform / CRM / data system</option>
+      <option value="both">Both</option>
+      <option value="not-sure">Not sure yet</option>
+    </select>
+    <textarea name="message"></textarea>
+    <input type="text" name="company" />
+  </form>
+</body>
+</html>

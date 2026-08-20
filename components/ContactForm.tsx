@@ -4,6 +4,14 @@ import { useState, type FormEvent } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+// Netlify's form endpoint expects a standard urlencoded POST body, the
+// same as a plain HTML form submit — not JSON.
+function encode(data: Record<string, string>) {
+  return Object.keys(data)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+    .join("&");
+}
+
 // Shared class for all form controls — border, bg, focus transition, placeholder.
 const inputClass =
   "mt-2 w-full border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none " +
@@ -40,27 +48,30 @@ export default function ContactForm() {
 
     const form = event.currentTarget;
     const data = new FormData(form);
-    const payload = {
-      name: data.get("name"),
-      email: data.get("email"),
-      project: data.get("project"),
-      message: data.get("message"),
-      company: data.get("company"), // honeypot
+    const payload: Record<string, string> = {
+      "form-name": "contact",
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      project: String(data.get("project") ?? ""),
+      message: String(data.get("message") ?? ""),
+      company: String(data.get("company") ?? ""), // honeypot
     };
 
     try {
-      const res = await fetch("/api/contact", {
+      // Netlify intercepts this POST at the edge and matches it against
+      // the static form registered via public/__forms.html — no backend
+      // route or third-party email API involved. Notifications are
+      // configured in the Netlify dashboard (Site settings → Forms →
+      // Form notifications), not in this code.
+      const res = await fetch("/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(payload),
       });
-      const result = await res.json();
 
-      if (!res.ok || !result.ok) {
+      if (!res.ok) {
         setStatus("error");
-        setErrorMessage(
-          result.error ?? "Something went wrong — please try again."
-        );
+        setErrorMessage("Something went wrong — please try again.");
         return;
       }
 
@@ -109,9 +120,21 @@ export default function ContactForm() {
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+    <form
+      className="space-y-6"
+      name="contact"
+      data-netlify="true"
+      netlify-honeypot="company"
+      onSubmit={handleSubmit}
+    >
+      {/* Required by Netlify's form handling to match this submission
+          against the static form registered via public/__forms.html. */}
+      <input type="hidden" name="form-name" value="contact" />
+
       {/* Honeypot — hidden from real visitors via CSS, not display:none
-          (some bots skip display:none fields), left blank by anyone human. */}
+          (some bots skip display:none fields), left blank by anyone human.
+          Netlify rejects submissions where this is filled automatically
+          (netlify-honeypot above), so there's no server-side check needed. */}
       <div className="absolute left-[-9999px]" aria-hidden="true">
         <label htmlFor="company">Company</label>
         <input
