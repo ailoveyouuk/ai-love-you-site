@@ -103,9 +103,31 @@ export default function PixelGridHero() {
       }
     }
 
+    // Deterministic pseudo-random derived from a cell's seed, used to give
+    // each cell its own twinkle cycle length/offset without a second
+    // typed array — keeps memory flat while still looking independent.
+    function hashSeed(seed: number) {
+      const s = Math.sin(seed * 12.9898) * 43758.5453;
+      return s - Math.floor(s);
+    }
+
+    // Cells build in diagonally (top-left → bottom-right) on first paint,
+    // each staggered by its position, then settles into a continuous
+    // twinkle: at a random point in its own cycle a cell flashes up to
+    // full brightness and eases back down, independent of every other
+    // cell, so the grid visibly changes over time even with no cursor.
+    const INTRO_STAGGER_MS = 900;
+    const FADE_IN_MS = 500;
+    const TWINKLE_MIN_CYCLE = 2.5;
+    const TWINKLE_CYCLE_RANGE = 4.5;
+    const TWINKLE_PULSE_WIDTH = 0.8; // seconds a flash stays visible within its cycle
+
     function draw(now: number) {
-      const t = (now - start) / 1000;
+      const elapsed = now - start;
+      const t = elapsed / 1000;
       ctx!.clearRect(0, 0, width, height);
+
+      const maxDiag = rows + cols || 1;
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -114,10 +136,31 @@ export default function PixelGridHero() {
           const x = c * STEP;
           const y = r * STEP;
 
-          // Slow ambient drift — gentle amplitude so it reads as dynamism,
-          // not noise, and stays legible under the text scrim.
+          // Diagonal build-in stagger + per-cell jitter so the reveal
+          // reads as organic rather than a rigid wipe.
+          const diagFrac = (r + c) / maxDiag;
+          const jitter = hashSeed(seed) * 0.6;
+          const introDelay = (diagFrac + jitter) * INTRO_STAGGER_MS;
+          const cellElapsed = elapsed - introDelay;
+          if (cellElapsed < 0) continue;
+          const buildIn = Math.min(1, cellElapsed / FADE_IN_MS);
+
+          // Ambient low-level drift, kept subtle — the twinkle carries
+          // most of the visible motion.
           const wave =
             0.5 + 0.5 * Math.sin(t * 0.5 + seed + c * 0.32 + r * 0.24);
+
+          // Independent twinkle: each cell has its own cycle length
+          // (derived from its seed) and flashes once per cycle, easing
+          // up then back down — pixels visibly swap in and out at rest.
+          const cycle = TWINKLE_MIN_CYCLE + hashSeed(seed + 1.7) * TWINKLE_CYCLE_RANGE;
+          const phaseOffset = hashSeed(seed + 3.3) * cycle;
+          const localT = (t + phaseOffset) % cycle;
+          let twinkle = 0;
+          if (localT < TWINKLE_PULSE_WIDTH) {
+            const p = localT / TWINKLE_PULSE_WIDTH;
+            twinkle = Math.sin(p * Math.PI); // smooth rise + fall
+          }
 
           const cx = x + CELL / 2;
           const cy = y + CELL / 2;
@@ -131,7 +174,9 @@ export default function PixelGridHero() {
           const falloff = 260;
           const proximity = Math.exp(-dist / falloff);
 
-          const intensity = Math.min(1, wave * 0.45 + proximity * 0.95);
+          const intensity =
+            Math.min(1, wave * 0.25 + twinkle * 0.7 + proximity * 0.95) *
+            buildIn;
           if (intensity < 0.03) continue;
 
           const rgb = paletteRgb[hues[idx]];
@@ -175,7 +220,10 @@ export default function PixelGridHero() {
     }
     function handleResize() {
       resize();
-      if (reduceMotion) draw(performance.now());
+      // Draw one static frame well past the intro window so every cell
+      // has already "built in" — reduced-motion users get a settled
+      // grid, not a half-revealed one.
+      if (reduceMotion) draw(start + 999999);
     }
     function handleVisibility() {
       if (document.hidden) {
@@ -205,7 +253,7 @@ export default function PixelGridHero() {
     observer.observe(parent);
 
     if (reduceMotion) {
-      draw(performance.now());
+      draw(start + 999999);
     }
 
     return () => {
