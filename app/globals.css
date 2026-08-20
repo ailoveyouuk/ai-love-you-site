@@ -8,20 +8,41 @@
 */
 
 :root {
-  --background: #fcfcfd;
-  --surface: rgba(14, 14, 16, 0.03);
-  --surface-2: rgba(14, 14, 16, 0.05);
-  --foreground: #0e0e10;
-  --muted: #7f8489;
-  --border: rgba(14, 14, 16, 0.1);
-  --accent: #e34234;
-  --accent-soft: rgba(227, 66, 52, 0.1);
+  /* Site-wide base tokens — unified with the Akaru-inspired palette
+     (warm paper background, near-black ink) so every page shares one
+     system instead of two adjacent ones. --ak-* aliases below point at
+     the same values for components that reference them directly. */
+  --background: #f6f5f2;
+  --surface: rgba(17, 17, 16, 0.03);
+  --surface-2: rgba(17, 17, 16, 0.05);
+  --foreground: #111110;
+  --muted: #8c8880;
+  /* Heading colour — a darker grey than body copy, but staying in the
+     same neutral family rather than switching to the accent. */
+  --heading: #3a3733;
+  --border: rgba(17, 17, 16, 0.12);
+  --accent: #e8622c;
+  --accent-soft: rgba(232, 98, 44, 0.1);
 
   /* Pixel-art nod: a system monospace stack, used sparingly for small
      uppercase labels (eyebrows, captions, nav) alongside the serif
-     signature logo and Helvetica Neue body/headline type. */
+     signature logo and body/headline type. */
   --font-pixel: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono",
     Menlo, Consolas, monospace;
+
+  /* Body copy — paragraphs, contact details, captions. Leads with each
+     platform's own native humanist sans (San Francisco on Mac/iOS, Segoe
+     UI on Windows, Roboto on Android/Chrome OS) rather than forcing
+     Helvetica Neue everywhere — closer to what a refined agency site
+     like Akaru actually reads like, and noticeably warmer than the
+     plain Helvetica Neue stack this replaces. "Inter" is listed so it's
+     picked up automatically if it's ever wired in via next/font/google
+     (this sandbox has no build-time network access to fetch it, but a
+     deploy target with normal internet access can add it — see
+     app/layout.tsx). Headlines/headings keep --font-display separately,
+     unaffected by this change. */
+  --font-body: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
 
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -29,6 +50,17 @@
   --spacing-lg: 4rem;
   --spacing-xl: 8rem;
   --nav-height: 80px;
+
+  /* Akaru token aliases — now identical to the base tokens above (the
+     whole site shares one palette), kept as separate names because the
+     paged homepage engine and a handful of components reference them
+     directly. */
+  --ak-bg: var(--background);
+  --ak-ink: var(--foreground);
+  --ak-muted: var(--muted);
+  --ak-line: var(--border);
+  --ak-line-strong: rgba(17, 17, 16, 0.22);
+  --ak-accent: var(--accent);
 }
 
 @theme inline {
@@ -39,9 +71,11 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
-  /* Swap to var(--font-inter-tight) once next/font/google can be used
-     (needs build-time network access) — see app/layout.tsx. */
-  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Brand display/heading font — loaded via next/font/google in
+     app/layout.tsx (Inter_Tight), exposed as --font-inter-tight on
+     <html>. Falls back to Helvetica Neue if that variable isn't set. */
+  --font-display: var(--font-inter-tight), "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
 }
 
 html {
@@ -51,17 +85,19 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
 
-/* Display / heading typography */
+/* Display / heading typography — oversized, mixed-case, tight leading.
+   Metadata (labels, nav, captions) carries the uppercase/tracked-out
+   treatment instead; see .eyebrow / .ak-label / .nav-link. */
 h1,
 h2,
 h3 {
+  color: var(--heading);
   font-weight: 400;
-  text-transform: uppercase;
   letter-spacing: -0.02em;
   font-family: var(--font-display), "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -97,72 +133,48 @@ h3 {
   );
 }
 
-/* Buttons — transparent + 1px border, fills solid on hover */
+/* Buttons — underline text-links, not pills. A 1px rule under small
+   tracked-out label type; the gap between label and arrow widens on
+   hover instead of filling a background. Matches .ak-btn. */
 .btn {
   position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   background: transparent;
   color: var(--foreground);
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  padding: 0.85rem 1.75rem;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0 0 0.35rem;
   font-family: var(--font-pixel);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: all 0.25s ease;
+  letter-spacing: 0.1em;
+  transition: color 0.25s ease, border-color 0.25s ease, gap 0.25s ease;
   cursor: pointer;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-/* Pixel-dither sweep — a faint checkerboard mask that sweeps in on
-   hover, the pill's small nod to the pixel-grid hero. */
-.btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image: repeating-conic-gradient(
-    currentColor 0% 25%,
-    transparent 0% 50%
-  );
-  background-size: 4px 4px;
-  opacity: 0;
-  transform: translateX(-100%);
-  transition: transform 0.35s ease, opacity 0.35s ease;
-}
-
-.btn:hover::before {
-  opacity: 0.12;
-  transform: translateX(0);
 }
 
 .btn:hover {
-  background: var(--foreground);
-  color: var(--background);
+  color: var(--accent);
   border-color: var(--foreground);
+  gap: 0.9rem;
+  background: transparent;
 }
 
 .btn-solid {
-  background: var(--accent);
-  color: var(--background);
+  color: var(--accent);
   border-color: var(--accent);
 }
 
 .btn-solid:hover {
-  background: var(--foreground);
-  color: var(--background);
+  color: var(--foreground);
   border-color: var(--foreground);
 }
 
 .btn-sm {
-  padding: 0.5rem 1.1rem;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
 }
 
 /* Small uppercase label — homepage eyebrow, case-study category/eyebrow
@@ -337,5 +349,539 @@ h3 {
   .bg-ambient::before,
   .bg-ambient::after {
     animation: none;
+  }
+}
+
+/* ==========================================================================
+   Akaru-inspired design language — PILOT
+   Scoped under .akaru-theme so it can sit alongside the existing pixel-art
+   system while it's being trialled on the homepage + one case study. Once
+   approved this becomes the site-wide system and the scoping wrapper (plus
+   the old pixel-art tokens/components) gets removed.
+
+   Reference: akaru.fr — near-monochrome palette, one accent used only for
+   small labels/links, numbered-index structure in place of decoration,
+   oversized mixed-case display type against tiny tracked-out uppercase
+   captions, full-bleed imagery, "sliding door" panel reveals.
+   ========================================================================== */
+
+.akaru-theme {
+  background: var(--ak-bg);
+  color: var(--ak-ink);
+}
+
+.ak-label {
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ak-muted);
+}
+
+.ak-label .accent {
+  color: var(--ak-accent);
+}
+
+.ak-index {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--ak-accent);
+}
+
+/* Oversized mixed-case display headline — the inverse of the rest of the
+   site's uppercase h1/h2 treatment. Tight leading, negative tracking at
+   large sizes, normal case so it reads editorial rather than "SaaS". */
+.ak-headline {
+  font-family: var(--font-display), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+}
+
+.ak-heading {
+  font-family: var(--font-display), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.ak-rule {
+  border-top: 1px solid var(--ak-line);
+}
+
+.ak-link {
+  position: relative;
+  color: var(--ak-ink);
+  text-decoration: none;
+}
+
+.ak-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: bottom left;
+  transition: transform 0.3s ease;
+}
+
+.ak-link-accent {
+  color: var(--ak-accent);
+}
+
+.ak-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-pixel);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ak-ink);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--ak-line-strong);
+  transition: border-color 0.25s ease, color 0.25s ease, gap 0.25s ease;
+}
+
+.ak-btn:hover {
+  border-color: var(--ak-ink);
+  gap: 0.9rem;
+  color: var(--ak-accent);
+}
+
+/* Modifier for primary "Start a project" CTAs — accent by default,
+ *  settling to ink on hover (the inverse of the default .ak-btn). */
+.ak-btn-accent {
+  color: var(--ak-accent);
+  border-color: var(--ak-accent);
+}
+
+.ak-btn-accent:hover {
+  color: var(--ak-ink);
+  border-color: var(--ak-ink);
+}
+
+/* Sliding-door reveal — two panels meeting at the centre line that part
+   toward the outer edges to reveal the image beneath. Used for entrance
+   (scroll into view) and for swapping between projects (doors close over
+   the old image, then reopen on the new one). */
+.ak-door-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--ak-ink);
+}
+
+.ak-door-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: var(--ak-bg);
+  z-index: 2;
+  transition: transform 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ak-door-panel--left {
+  left: 0;
+  transform: translateX(0);
+}
+
+.ak-door-panel--right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.ak-door-frame.is-open .ak-door-panel--left {
+  transform: translateX(-100%);
+}
+
+.ak-door-frame.is-open .ak-door-panel--right {
+  transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-door-panel {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Paged homepage engine
+   Full-viewport, horizontally-navigated single-page experience: fixed
+   stage between the header and a slim persistent footer, one panel visible
+   at a time, a single large door wiping right-to-left on every transition
+   regardless of direction (a consistent signature motion, not tied to
+   next/prev). Desktop/large-viewport only — mobile falls back to a normal
+   stacked scroll, see the .ak-paged-mobile rules below.
+   ========================================================================== */
+
+:root {
+  --home-footer-h: 56px;
+}
+
+.ak-paged-stage {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: var(--home-footer-h);
+  overflow: hidden;
+  background: var(--ak-bg, #f6f5f2);
+}
+
+.ak-paged-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* .container-page uses auto left/right margins to centre itself — inside
+   a column flex container that alone stops it from stretching to the
+   parent's full cross-axis width (auto margins take priority over
+   align-items: stretch per the flexbox spec), so it shrinks to fit its
+   content instead. Forcing width: 100% here removes that ambiguity: the
+   auto margins then just centre the now-full-width box under max-width,
+   which is what every panel actually wants. */
+.ak-paged-panel > .container-page {
+  width: 100%;
+}
+
+/* The wipe door itself — one large panel, starts parked off-screen right,
+   sweeps to cover (translateX 100% -> 0), content swaps while fully
+   covered, then continues the same direction off-screen left
+   (0 -> -100%). Always right-to-left, regardless of nav direction. */
+.ak-paged-door {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: var(--ak-ink, #111110);
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+.ak-paged-door.is-covering {
+  transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
+  transform: translateX(0%);
+}
+
+.ak-paged-door.is-exiting {
+  transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1);
+  transform: translateX(-100%);
+}
+
+.ak-paged-door.is-reset {
+  transition: none;
+  transform: translateX(100%);
+}
+
+.ak-paged-sidenav {
+  position: fixed;
+  right: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.9rem;
+}
+
+.ak-paged-sidenav button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ak-paged-sidenav .label {
+  font-family: var(--font-pixel);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ak-muted, #8c8880);
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.ak-paged-sidenav button:hover .label,
+.ak-paged-sidenav button.active .label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ak-paged-sidenav .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--ak-line-strong, rgba(17, 17, 16, 0.22));
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.ak-paged-sidenav button.active .dot {
+  background: var(--ak-accent, #e34234);
+  transform: scale(1.6);
+}
+
+.ak-paged-arrows {
+  position: fixed;
+  left: 1.5rem;
+  bottom: calc(var(--home-footer-h) + 1.25rem);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ak-paged-arrow {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ak-line-strong, rgba(17, 17, 16, 0.22));
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ak-ink, #111110);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.ak-paged-arrow:hover {
+  border-color: var(--ak-ink, #111110);
+  background: var(--ak-ink, #111110);
+  color: var(--ak-bg, #f6f5f2);
+}
+
+.ak-paged-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.ak-paged-arrow:disabled:hover {
+  border-color: var(--ak-line-strong, rgba(17, 17, 16, 0.22));
+  background: transparent;
+  color: var(--ak-ink, #111110);
+}
+
+.ak-home-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--home-footer-h);
+  z-index: 30;
+  border-top: 1px solid var(--ak-line, rgba(17, 17, 16, 0.12));
+  background: var(--ak-bg, #f6f5f2);
+}
+
+@media (max-width: 1023px) {
+  .ak-paged-stage,
+  .ak-paged-sidenav,
+  .ak-paged-arrows,
+  .ak-home-footer {
+    display: none;
+  }
+}
+
+/* Faint animated logo watermark — sits behind panel/section content.
+   Rendered as the first child of whichever container is actually
+   visible (paged stage on desktop, stacked wrapper on mobile), so it
+   never appears twice and never needs its own responsive logic. */
+.ak-logo-watermark {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ak-logo-watermark img {
+  width: min(1600px, 150vw);
+  height: auto;
+  opacity: 0.05;
+  animation: ak-logo-drift 24s ease-in-out infinite;
+}
+
+@keyframes ak-logo-drift {
+  0% {
+    transform: rotate(-2deg) scale(1);
+  }
+  50% {
+    transform: rotate(2deg) scale(1.06);
+  }
+  100% {
+    transform: rotate(-2deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-logo-watermark img {
+    animation: none;
+  }
+}
+
+/* Everything painted after the watermark needs to sit above it. Panel
+   and door already declare their own position (absolute) with correct
+   stacking further up this file — redeclaring position here would (and
+   once did) collide with that rule at equal specificity and silently
+   drop them out of absolute positioning, so only z-index is added for
+   them. Mobile panels are normal-flow, so they need position:relative
+   for z-index to take effect at all. */
+.ak-paged-panel {
+  z-index: 1;
+}
+
+.ak-mobile-panels {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scroll/swipe affordance — shown only on the intro panel. Bouncing
+   double-chevron plus a small tracked label; the gesture is genuinely
+   vertical (wheel/trackpad/touch), so the arrow buttons match it too. */
+/* Numbered step/capability reveal — used by useStepReveal for any
+   "01, 02, 03..." list or grid (process steps, capabilities, the work
+   index, homepage panels) so each item builds in after the last rather
+   than the whole group appearing at once. */
+.ak-step-pending {
+  opacity: 0;
+}
+
+@keyframes ak-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.ak-step-in {
+  animation: ak-step-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Number pops in first — quicker and smaller-travel than the body fade,
+   so it reads as a distinct first beat before the title starts typing. */
+@keyframes ak-step-number-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.ak-step-number-in {
+  animation: ak-step-number-in 0.3s ease-out both;
+}
+
+/* Blinking caret shown while a title is mid-type. */
+.ak-type-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: -0.1em;
+  animation: ak-type-blink 0.9s steps(1) infinite;
+}
+
+@keyframes ak-type-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-step-in,
+  .ak-step-number-in {
+    animation: none;
+  }
+  .ak-step-pending {
+    opacity: 1;
+  }
+  .ak-type-cursor {
+    display: none;
+  }
+}
+
+/* Small crossfade for the Work carousel's text column when the active
+   project changes — keyed by slug so React remounts and replays it. */
+.ak-fade-in {
+  animation: ak-fade-in 0.45s ease both;
+}
+
+@keyframes ak-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-fade-in {
+    animation: none;
+  }
+}
+
+.ak-scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3.5rem;
+}
+
+.ak-scroll-hint .chev {
+  display: block;
+  line-height: 1;
+  font-size: 1.1rem;
+  color: var(--ak-muted);
+  animation: ak-bounce 1.7s ease-in-out infinite;
+}
+
+@keyframes ak-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(7px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-scroll-hint .chev {
+    animation: none;
+    opacity: 0.6;
   }
 }

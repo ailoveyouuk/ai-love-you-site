@@ -6,12 +6,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/work", label: "Work" },
   { href: "/website-development", label: "Websites" },
   { href: "/platform-development", label: "Platforms" },
+  { href: "/microsoft-365", label: "Microsoft 365" },
   { href: "/ai-integration", label: "AI" },
+  { href: "/work", label: "Cases" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 export default function Nav() {
@@ -19,7 +19,7 @@ export default function Nav() {
   const pathname = usePathname();
 
   /** True when the given href matches the current route.
-   *  Uses startsWith so /work/apki-technologies still highlights "Work". */
+   *  Uses startsWith so /work/apki-technologies still highlights "Cases". */
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
@@ -82,9 +82,7 @@ export default function Nav() {
               href={link.href}
               onClick={() => setOpen(false)}
               className={`py-2.5 transition-colors ${
-                isActive(link.href)
-                  ? "text-accent"
-                  : "text-muted hover:text-foreground"
+                isActive(link.href) ? "text-accent" : "text-muted hover:text-foreground"
               }`}
             >
               {link.label}

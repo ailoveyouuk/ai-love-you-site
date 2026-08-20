@@ -6,10 +6,13 @@ export type Project = {
   category: string;
   stack: string[];
   href: string;
-  /** Representative real image for card thumbnails. Omit to fall back to
-   * PlaceholderShot (used only for Renewables Connect, which isn't live
-   * yet — every other project has a real screenshot or video still). */
+  /** Representative real image for card thumbnails, and the poster shown
+   * before `video` loads/plays. Omit to fall back to PlaceholderShot. */
   image?: string;
+  /** Screen recording used in place of the still image where the
+   * homepage carousel wants motion. Falls back to `image` when absent
+   * (Renewables Connect has screenshots only, no recording yet). */
+  video?: string;
 };
 
 export const projects: Project[] = [
@@ -23,6 +26,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "Tailwind CSS"],
     href: "/work/apki-technologies",
     image: "/images/apki/homepage-hero.jpg",
+    video: "/video/apki/homepage-to-product.mp4",
   },
   {
     slug: "yardley-hastings-garage",
@@ -34,19 +38,19 @@ export const projects: Project[] = [
     stack: ["Next.js", "Supabase", "Netlify"],
     href: "/work/yardley-hastings-garage",
     image: "/video/stills/yhg/homepage.jpg",
+    video: "/video/yardley-hastings-garage/homepage.mp4",
   },
   {
     slug: "renewables-connect",
     name: "Renewables Connect",
     client: "Renewables Connect",
     summary:
-      "Architecture and build plan for a ground-up rebuild of a SharePoint-based learning platform into a structured, CMS-driven platform on Azure.",
+      "A four-app learning platform rebuild — learner, institution, employer and admin — replacing a SharePoint-based system with a working dashboard, module viewer and assessment engine on Azure.",
     category: "Platform",
-    stack: ["Next.js", "Sanity CMS", "Azure"],
+    stack: ["Next.js", "TypeScript", "Chart.js", "Azure"],
     href: "/work/renewables-connect",
-    // No image — platform isn't live/demonstrable yet, so this
-    // deliberately falls back to the placeholder rather than implying
-    // a screenshot of something that doesn't exist.
+    image: "/images/renewables-connect/dashboard.jpg",
+    // No screen recording for this one yet — static screenshots only.
   },
   {
     slug: "ai-love-you-journal",
@@ -58,5 +62,6 @@ export const projects: Project[] = [
     stack: ["HTML", "CSS", "JavaScript"],
     href: "/work/ai-love-you-journal",
     image: "/video/stills/journal/homepage.jpg",
+    video: "/video/journal/homepage.mp4",
   },
 ];

@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PixelReveal from "@/components/PixelReveal";
-import PixelRevealGroup from "@/components/PixelRevealGroup";
+import CapabilityGrid from "@/components/CapabilityGrid";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Website Development — AI Love You",
+  title: "Website Development",
+  description:
+    "A consultative website build in Next.js and Tailwind — design, data, SEO and six months of ongoing management included as standard.",
+  openGraph: {
+    title: "Website Development — AI Love You",
+    description:
+      "A consultative website build in Next.js and Tailwind — design, data, SEO and six months of ongoing management included as standard.",
+  },
 };
 
 const process = [
@@ -83,100 +90,88 @@ const capabilities = [
 
 export default function WebsiteDevelopmentPage() {
   return (
-    <div className="container-page py-20">
-      <p className="eyebrow text-accent">Website Development</p>
-      <h1 className="mt-4 max-w-2xl text-4xl sm:text-5xl">
-        What&apos;s included in every website build.
-      </h1>
-      <p className="mt-5 max-w-2xl text-lg text-muted">
-        A website here isn&apos;t just a design handed over and forgotten.
-        It&apos;s a consultative build &mdash; design, data, discoverability
-        and support &mdash; put together so it keeps working after launch,
-        not just on the day it ships.
-      </p>
-
-      <div className="mt-8">
-        <Link href="/contact" className="btn btn-solid">
-          Start a project
-        </Link>
-      </div>
-
-      {/* Ongoing management — highlighted standard inclusion */}
-      <div className="pixel-dots mt-16 border border-accent/30 bg-accent/[0.04] p-8">
-        <p className="eyebrow text-xs text-accent">Included as standard</p>
-        <h2 className="mt-3 text-2xl text-foreground">
-          Six months of ongoing management, on every project.
-        </h2>
-        <p className="mt-3 max-w-2xl text-sm text-muted">
-          Every website I build includes six months of monitoring, small
-          fixes, content support and security/dependency updates after
-          launch &mdash; not sold as an add-on. After that, ongoing support
-          continues on a simple rolling basis if you want it.
+    <div className="akaru-theme">
+      <div className="container-page pt-16">
+        <Breadcrumbs items={[{ label: "Website Development" }]} />
+        <p className="ak-label mt-10">
+          <span className="accent">Website Development</span>
         </p>
-      </div>
-
-      <div className="mt-20">
-        <p className="eyebrow text-xs text-muted">Process</p>
-        <h2 className="mt-3 text-2xl text-foreground">
-          How a project runs, start to finish.
-        </h2>
-        <PixelRevealGroup className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {process.map((step, i) => (
-            <PixelReveal
-              key={step.title}
-              number={String(i + 1).padStart(2, "0")}
-              title={step.title}
-              body={step.body}
-              className="min-h-[200px] bg-surface"
-            />
-          ))}
-        </PixelRevealGroup>
-      </div>
-
-      <div className="mt-20">
-        <p className="eyebrow text-xs text-muted">What&apos;s covered</p>
-        <h2 className="mt-3 text-2xl text-foreground">
-          Every capability that goes into the build.
-        </h2>
-        <PixelRevealGroup className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {capabilities.map((item, i) => (
-            <PixelReveal
-              key={item.title}
-              number={String(i + 1).padStart(2, "0")}
-              title={item.title}
-              body={item.body}
-              className="min-h-[200px]"
-            />
-          ))}
-        </PixelRevealGroup>
-      </div>
-
-      <div className="mt-24 flex flex-col items-start gap-6 border-t border-border pt-16">
-        <h2 className="max-w-2xl text-3xl sm:text-4xl">
-          Looking for a platform, or AI, behind the site too?
-        </h2>
-        <p className="max-w-xl text-muted">
-          Data management, CRM-style tooling and project systems are covered
-          on{" "}
-          <Link
-            href="/platform-development"
-            className="text-accent underline decoration-accent/40 underline-offset-4"
-          >
-            platform development
-          </Link>
-          , and training, automation and tooling built on your own data are
-          covered on{" "}
-          <Link
-            href="/ai-integration"
-            className="text-accent underline decoration-accent/40 underline-offset-4"
-          >
-            AI integration
-          </Link>
-          .
+        <h1 className="ak-headline mt-4 max-w-3xl">
+          What&apos;s included in every website build.
+        </h1>
+        <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--ak-muted)" }}>
+          A website here isn&apos;t just a design handed over and forgotten.
+          It&apos;s a consultative build — design, data, discoverability and
+          support — put together so it keeps working after launch, not just
+          on the day it ships.
         </p>
-        <Link href="/contact" className="btn btn-solid">
-          Tell me what you&apos;re building
-        </Link>
+
+        <div className="mt-8">
+          <Link href="/contact" className="ak-btn ak-btn-accent">
+            Start a project &rarr;
+          </Link>
+        </div>
+      </div>
+
+      <div className="ak-rule mt-16">
+        <div className="container-page py-14">
+          <p className="ak-label">
+            <span className="accent">Included as standard</span>
+          </p>
+          <h2 className="ak-heading mt-3 text-2xl">
+            Six months of ongoing management, on every project.
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm" style={{ color: "var(--ak-muted)" }}>
+            Every website I build includes six months of monitoring, small
+            fixes, content support and security/dependency updates after
+            launch — not sold as an add-on. After that, ongoing support
+            continues on a simple rolling basis if you want it.
+          </p>
+        </div>
+      </div>
+
+      <div className="ak-rule">
+        <div className="container-page py-16">
+          <p className="ak-label">Process</p>
+          <h2 className="ak-heading mt-3 text-2xl">
+            How a project runs, start to finish.
+          </h2>
+          <CapabilityGrid items={process} />
+        </div>
+      </div>
+
+      <div className="ak-rule">
+        <div className="container-page py-16">
+          <p className="ak-label">What&apos;s covered</p>
+          <h2 className="ak-heading mt-3 text-2xl">
+            Every capability that goes into the build.
+          </h2>
+          <CapabilityGrid items={capabilities} />
+        </div>
+      </div>
+
+      <div className="ak-rule">
+        <div className="container-page flex flex-col items-start gap-6 py-16">
+          <h2 className="ak-heading max-w-2xl text-3xl">
+            Looking for a platform, or AI, behind the site too?
+          </h2>
+          <p className="max-w-xl" style={{ color: "var(--ak-muted)" }}>
+            Data management, CRM-style tooling and project systems are
+            covered on{" "}
+            <Link href="/platform-development" className="ak-link-accent">
+              platform development
+            </Link>
+            , and training, automation and tooling built on your own data are
+            covered on{" "}
+            <Link href="/ai-integration" className="ak-link-accent">
+              AI integration
+            </Link>
+            .
+          </p>
+          <Link href="/contact" className="ak-btn">
+            Tell me what you&apos;re building &rarr;
+          </Link>
+        </div>
       </div>
     </div>
   );

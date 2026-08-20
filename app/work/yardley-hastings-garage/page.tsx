@@ -1,105 +1,119 @@
 import type { Metadata } from "next";
 import {
-  CaseStudyHeader,
-  CaseStudySection,
+  CaseStudyHero,
+  CaseStudyFeatures,
+  CaseStudyVisuals,
+  CaseStudyCTA,
   CaseStudyFooterNav,
 } from "@/components/CaseStudyLayout";
-import VisualBlock from "@/components/VisualBlock";
 
 export const metadata: Metadata = {
-  title: "Yardley Hastings Garage — AI Love You",
+  title: "Yardley Hastings Garage",
+  description:
+    "A Next.js site for an independent garage, with a managed stocklist and customer reviews as structured data behind the marketing front end.",
+  openGraph: {
+    title: "Yardley Hastings Garage — AI Love You",
+    description:
+      "A Next.js site for an independent garage, with a managed stocklist and customer reviews as structured data behind the marketing front end.",
+    images: [
+      {
+        url: "/video/stills/yhg/homepage.jpg",
+        width: 1280,
+        height: 704,
+        alt: "Yardley Hastings Garage homepage",
+      },
+    ],
+  },
 };
+
+const overview =
+  "A Next.js site for an independent garage, with a managed stocklist and customer reviews as structured data behind the marketing front end — not just a brochure site.";
+
+const features = [
+  {
+    label: "Technology",
+    value: "Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4 — mobile-first throughout.",
+  },
+  {
+    label: "Backend & data",
+    value:
+      "Supabase (Postgres) behind a server-side API route — customers, vehicles and enquiries are structured tables, not a form-to-email bridge. A new enquiry upserts the customer by email first, so repeat contact from the same person links to one record instead of duplicating it. A stocklist browser and homepage preview read from the same vehicles table used to manage listings.",
+  },
+  {
+    label: "Animation",
+    value:
+      "A scroll-triggered fade-in component reveals content as it enters view, alongside a homepage image/video carousel and a lazy-loaded background video that only starts downloading once it's needed.",
+  },
+  {
+    label: "Hosting",
+    value: "Netlify, via the official Next.js runtime plugin, on a Node 20 build.",
+  },
+  {
+    label: "Forms",
+    value:
+      "A general enquiry form and a separate vehicle-specific enquiry form tied to a stock listing, plus a slide-out service request drawer and a floating mobile call-to-action button for booking or calling directly — built around how the site actually gets used on a phone in a car park.",
+  },
+  {
+    label: "SEO & reviews",
+    value:
+      "Structured data (schema.org JSON-LD) for local business and vehicle listings, a generated sitemap and robots.txt, and a testimonials section pulling in real customer reviews.",
+  },
+];
+
+const visuals = [
+  {
+    label: "Home page — forecourt hero and current stock teaser",
+    src: "/video/yardley-hastings-garage/homepage.mp4",
+    poster: "/video/stills/yhg/homepage.jpg",
+    caption:
+      "Real workshop and forecourt photography in the hero, keeping the site grounded in the actual business rather than stock imagery, with a live teaser of current stock pulled straight from Supabase.",
+  },
+  {
+    label: "Site-wide navigation — servicing, bodywork and detailing",
+    src: "/video/yardley-hastings-garage/navigation.mp4",
+    poster: "/video/stills/yhg/navigation.jpg",
+    caption:
+      "Servicing, bodywork and detailing each get their own section off a single clear nav, so the site reads as one garage with several services rather than a bolted-together set of pages.",
+  },
+  {
+    label: "Stocklist page — structured vehicle listings from Supabase",
+    src: "/video/yardley-hastings-garage/stocklist.mp4",
+    poster: "/video/stills/yhg/stocklist.jpg",
+    caption:
+      "Each vehicle — make, model, registration, spec, photo set — is a structured Supabase record, so listings can be added, updated or removed without a developer in the loop.",
+  },
+  {
+    label: "Servicing — booking flow and service information",
+    src: "/video/yardley-hastings-garage/servicing.mp4",
+    poster: "/video/stills/yhg/servicing.jpg",
+    caption:
+      "Clear service information and a straightforward booking path — the kind of detail that turns a browsing visitor into a phone call or a booking, not just a page view.",
+  },
+];
+
+const stack = ["Next.js", "Supabase", "Netlify"];
 
 export default function YHGPage() {
   return (
-    <>
-      <CaseStudyHeader
+    <div className="akaru-theme">
+      <CaseStudyHero
         category="Website + Platform"
         title="Yardley Hastings Garage"
         summary="A Next.js site for an independent garage, with a managed stocklist and customer reviews as structured data behind the marketing front end — not just a brochure site."
-        stack={["Next.js", "Supabase", "Netlify"]}
+        stack={stack}
       />
 
-      <div className="container-page py-14">
-        <p className="max-w-2xl text-muted">
-          Yardley Hastings Garage needed a site that looks the part &mdash;
-          workshop and forecourt photography, service content &mdash; and
-          also keeps an accurate, current stocklist and real customer
-          reviews without the owner touching code. Built on Next.js with
-          Supabase as the backing store, deployed on Netlify.
-        </p>
-      </div>
+      <CaseStudyFeatures overview={overview} features={features} />
 
-      <div className="container-page space-y-16 pb-20">
-        <VisualBlock
-          label="Home page — forecourt hero and current stock teaser"
-          alt="Screen recording of the Yardley Hastings Garage home page, showing the forecourt hero and current stock teaser"
-          caption="Yardley Hastings Garage"
-          source="Live navigation, home page"
-          src="/video/yardley-hastings-garage/homepage.mp4"
-          poster="/video/stills/yhg/homepage.jpg"
-        >
-          <p>
-            Real workshop and forecourt photography in the hero, keeping the
-            site grounded in the actual business rather than stock imagery,
-            with a live teaser of current stock pulled straight from
-            Supabase.
-          </p>
-        </VisualBlock>
+      <CaseStudyVisuals visuals={visuals} />
 
-        <VisualBlock
-          label="Site-wide navigation — servicing, bodywork and detailing"
-          alt="Screen recording navigating the Yardley Hastings Garage site across its main sections"
-          caption="Yardley Hastings Garage"
-          source="Live navigation, full site"
-          src="/video/yardley-hastings-garage/navigation.mp4"
-          poster="/video/stills/yhg/navigation.jpg"
-        >
-          <p>
-            Servicing, bodywork and detailing each get their own section off
-            a single clear nav, so the site reads as one garage with several
-            services rather than a bolted-together set of pages.
-          </p>
-        </VisualBlock>
-
-        <VisualBlock
-          label="Stocklist page — structured vehicle listings from Supabase"
-          alt="Screen recording of the Yardley Hastings Garage stocklist page, showing structured vehicle listings"
-          caption="Yardley Hastings Garage"
-          source="Stocklist"
-          src="/video/yardley-hastings-garage/stocklist.mp4"
-          poster="/video/stills/yhg/stocklist.jpg"
-        >
-          <p>
-            Each vehicle &mdash; make, model, registration, spec, photo set
-            &mdash; is a structured Supabase record, so listings can be
-            added, updated or removed without a developer in the loop.
-          </p>
-        </VisualBlock>
-
-        <VisualBlock
-          label="Servicing — booking flow and service information"
-          alt="Screen recording of the Yardley Hastings Garage servicing pages and booking flow"
-          caption="Yardley Hastings Garage"
-          source="Servicing"
-          src="/video/yardley-hastings-garage/servicing.mp4"
-          poster="/video/stills/yhg/servicing.jpg"
-        >
-          <p>
-            Clear service information and a straightforward booking path
-            &mdash; the kind of detail that turns a browsing visitor into a
-            phone call or a booking, not just a page view.
-          </p>
-        </VisualBlock>
-      </div>
-
-      <CaseStudySection eyebrow="Outcome" title="Where it stands">
+      <CaseStudyCTA heading="Need a site with real data behind it, not just pages?">
         <p>
-          The garage now has one place customers browse and one place stock
-          gets managed, instead of a static site that goes stale the moment a
-          car sells.
+          Yardley Hastings Garage now has one place customers browse and one
+          place stock gets managed, instead of a static site that goes stale
+          the moment a car sells.
         </p>
-      </CaseStudySection>
+      </CaseStudyCTA>
 
       <CaseStudyFooterNav
         prev={{ href: "/work/apki-technologies", label: "APKI Technologies" }}
@@ -108,6 +122,6 @@ export default function YHGPage() {
           label: "Renewables Connect",
         }}
       />
-    </>
+    </div>
   );
 }

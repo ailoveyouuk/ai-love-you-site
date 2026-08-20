@@ -31,6 +31,12 @@ export default function Footer() {
               <Link href="/platform-development" className="transition-colors hover:text-accent">
                 Platforms
               </Link>
+              <Link href="/microsoft-365" className="transition-colors hover:text-accent">
+                Microsoft 365
+              </Link>
+              <Link href="/learning-platforms" className="transition-colors hover:text-accent">
+                Learning Platforms
+              </Link>
               <Link href="/ai-integration" className="transition-colors hover:text-accent">
                 AI Integration
               </Link>
@@ -43,7 +49,7 @@ export default function Footer() {
             </p>
             <div className="mt-3 flex flex-col gap-2 text-sm">
               <Link href="/work" className="transition-colors hover:text-accent">
-                Work
+                Cases
               </Link>
               <Link href="/about" className="transition-colors hover:text-accent">
                 About
@@ -97,13 +103,12 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="pixel-dots border-t border-border">
+      <div className="border-t border-border">
         <div className="eyebrow container-page flex flex-col gap-2 py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
             &copy; {new Date().getFullYear()} Lewis McKinnon, trading as AI
             Love You. All rights reserved.
           </p>
-          <p>Studio Vermilion // Carbon Black // Ink Gray</p>
         </div>
       </div>
     </footer>

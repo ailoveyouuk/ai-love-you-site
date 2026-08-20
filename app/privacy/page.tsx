@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — AI Love You",
+  title: "Privacy Policy",
+  description:
+    "What data ailoveyou.uk collects, why, and what rights you have over it — a showcase site and contact point, not a store or client portal.",
 };
 
 export default function PrivacyPage() {
   return (
-    <div className="container-page py-20">
-      <p className="eyebrow text-accent">Privacy</p>
-      <h1 className="mt-4 max-w-2xl text-4xl sm:text-5xl">Privacy Policy</h1>
-      <p className="mt-5 max-w-2xl text-lg text-muted">
+    <div className="akaru-theme container-page pt-16 pb-20">
+      <Breadcrumbs items={[{ label: "Privacy" }]} />
+      <p className="ak-label mt-10">
+        <span className="accent">Privacy</span>
+      </p>
+      <h1 className="ak-headline mt-4 max-w-2xl text-5xl">Privacy Policy</h1>
+      <p className="mt-6 max-w-2xl text-lg" style={{ color: "var(--ak-muted)" }}>
         This is a showcase website and a contact point &mdash; not a store
         or a client portal. It collects very little data, and this page
         explains exactly what, why, and what rights you have over it.
       </p>
-      <p className="mt-4 max-w-2xl text-sm text-muted">
+      <p className="mt-4 max-w-2xl text-sm" style={{ color: "var(--ak-muted)" }}>
         Last updated 14 August 2026
       </p>
 
