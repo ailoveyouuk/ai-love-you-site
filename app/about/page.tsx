@@ -77,7 +77,7 @@ export default function AboutPage() {
             <p>
               I also write the{" "}
               <a
-                href="https://www.ailoveyou.uk"
+                href="/journal"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ak-link-accent"
